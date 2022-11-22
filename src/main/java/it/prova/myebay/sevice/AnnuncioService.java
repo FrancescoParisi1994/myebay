@@ -25,4 +25,6 @@ public interface AnnuncioService {
 	public List<Annuncio> trovaAnnunciAperti();
 
 	public List<Annuncio> trovaAnnunciApertiDellUtente(Long id);
+	
+	public void buy(String username,Long id);
 }

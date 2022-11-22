@@ -16,6 +16,5 @@ public interface AnnuncioRepository extends CrudRepository<Annuncio, Long>, JpaS
 	public List<Annuncio> findByAperto(boolean input);
 
 	public List<Annuncio> findByApertoAndUtenteInserimento_Id(boolean input, Long id);
-	
-	
+
 }

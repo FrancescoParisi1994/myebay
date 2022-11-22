@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.myebay.model.Acquisto;
 import it.prova.myebay.model.Annuncio;
 import it.prova.myebay.model.Categoria;
 import it.prova.myebay.model.Utente;
@@ -23,6 +24,8 @@ public class AnnuncioServiceImpl implements AnnuncioService {
 	private AnnuncioRepository repository;
 	@Autowired
 	private UtenteService utenteService;
+	@Autowired
+	private AcquistoService acquistoService;
 
 	@Override
 	@Transactional(readOnly = true)
@@ -114,9 +117,30 @@ public class AnnuncioServiceImpl implements AnnuncioService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Annuncio> trovaAnnunciApertiDellUtente(Long id) {
 		// TODO Auto-generated method stub
 		return repository.findByApertoAndUtenteInserimento_Id(true, id);
+	}
+
+	@Override
+	@Transactional
+	public void buy(String username,Long id) {
+		Utente utente=utenteService.findByUsername(username);
+		Annuncio annuncio=repository.findById(id).orElse(null);
+		if (annuncio.getPrezzo()>utente.getCreditoResiduo()) {
+			throw new RuntimeException("utente senza soldi");
+		}
+		Acquisto acquisto = new Acquisto();
+		acquisto.setData(new Date());
+		acquisto.setDescrizione(annuncio.getTestoAnnuncio());
+		acquisto.setPrezzo(annuncio.getPrezzo());
+		acquisto.setUtenteAcquirente(utente);
+		acquistoService.insert(acquisto);
+		utente.setCreditoResiduo(utente.getCreditoResiduo()-annuncio.getPrezzo());
+		utenteService.aggiorna(utente);
+		annuncio.setAperto(false);
+		repository.save(annuncio);
 	}
 
 }

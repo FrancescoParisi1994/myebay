@@ -2,6 +2,7 @@ package it.prova.myebay.sevice;
 
 import java.util.List;
 
+import it.prova.myebay.dto.UtenteResetPasswordDTO;
 import it.prova.myebay.model.Utente;
 
 public interface UtenteService {
@@ -29,4 +30,6 @@ public interface UtenteService {
 	public Utente findByUsername(String username);
 
 	public List<Utente> findByUsernameNomeCognome(String term);
+	
+	public void cambioPassword(UtenteResetPasswordDTO utenteResetPasswordDTO,String username);
 }

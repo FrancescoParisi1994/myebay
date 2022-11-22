@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.myebay.dto.UtenteResetPasswordDTO;
 import it.prova.myebay.model.Ruolo;
 import it.prova.myebay.model.StatoUtente;
 import it.prova.myebay.model.Utente;
@@ -130,16 +131,28 @@ public class UtenteServiceImpl implements UtenteService {
 			utenteInstance.setStato(StatoUtente.ATTIVO);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	public Utente findByUsername(String username) {
 		return repository.findByUsername(username).orElse(null);
 
 	}
 
+	@Transactional(readOnly = true)
 	public List<Utente> findByUsernameNomeCognome(String term) {
 		return repository
 				.findAllByUsernameIgnoreCaseContainingOrNomeIgnoreCaseContainingOrCognomeIgnoreCaseContainingOrderByNomeAsc(
 						term, term, term);
 	}
 
+	@Transactional
+	public void cambioPassword(UtenteResetPasswordDTO utenteResetPasswordDTO,String username) {
+		Utente utente=repository.findByUsername(username).orElse(null);
+		String vecchiaPassword=utenteResetPasswordDTO.getVecchiaPassword();
+		if (!passwordEncoder.matches(vecchiaPassword, utente.getPassword())) {
+			throw new RuntimeException("Le password non sono uguali");
+		}
+		utente.setPassword(passwordEncoder.encode(utenteResetPasswordDTO.getNuovaPassword()));
+		repository.save(utente);
+	}
+	
 }

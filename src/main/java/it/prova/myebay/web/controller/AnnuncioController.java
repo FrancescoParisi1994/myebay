@@ -115,29 +115,16 @@ public class AnnuncioController {
 	}
 
 	@PostMapping("/buy")
-	public String buyAnnuncio(@RequestParam(required = true) Long idAnnuncio, Model model, HttpServletRequest request) {
-		UtenteDTO utenteInSessione = (UtenteDTO) request.getSession().getAttribute("userInfo");
-		Utente utente = utenteService.caricaSingoloUtente(utenteInSessione.getId());
-		Annuncio annuncio = annuncioService.findById(idAnnuncio);
-
-		if (annuncio.getPrezzo() > utente.getCreditoResiduo()) {
-			model.addAttribute("show_annunci_attr",
-					AnnuncioDTO.buildAnnuncioDTOFromModel(annuncioService.findEagerCategorie(idAnnuncio)));
+	public String buyAnnuncio(@RequestParam(required = true) Long idAnnuncio, Model model, HttpServletRequest request,Principal principal) {
+		
+		try {
+			annuncioService.buy(principal.getName(), idAnnuncio);			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 			model.addAttribute("errorMessage", "Credito insufficente");
 			return "annunci/show";
 		}
-		utente.setCreditoResiduo(utente.getCreditoResiduo() - annuncio.getPrezzo());
-		utenteService.aggiorna(utente);
-
-		Acquisto acquisto = new Acquisto();
-		acquisto.setData(new Date());
-		acquisto.setDescrizione(annuncio.getTestoAnnuncio());
-		acquisto.setPrezzo(annuncio.getPrezzo());
-		acquisto.setUtenteAcquirente(utente);
-		acquistoService.insert(acquisto);
-
-		annuncio.setAperto(false);
-		annuncioService.update(annuncio);
 
 		return "redirect:/acquisto";
 	}
