@@ -9,8 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
+
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
@@ -33,6 +32,22 @@ public class Categoria {
 
 	public Categoria() {
 		super();
+	}
+
+	public Categoria(Long id, String descrizione, String codice, Set<Annuncio> annunci) {
+		super();
+		this.id = id;
+		this.descrizione = descrizione;
+		this.codice = codice;
+		this.annunci = annunci;
+	}
+
+	public Set<Annuncio> getAnnunci() {
+		return annunci;
+	}
+
+	public void setAnnunci(Set<Annuncio> annunci) {
+		this.annunci = annunci;
 	}
 
 	public Categoria(Long id, String descrizione, String codice) {

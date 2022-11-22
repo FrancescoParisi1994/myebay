@@ -15,6 +15,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "annuncio")
@@ -32,14 +34,57 @@ public class Annuncio {
 	private Date data;
 	@Column(name = "aperto")
 	private boolean aperto;
-	@Column(name = "utenteInserimento")
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "utenteInserimento_id", nullable = false)
 	private Utente utenteInserimento;
 
 	@Column(name = "categorie")
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "categoria_annuncio", joinColumns = @JoinColumn(name = "categoria_id", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "annuncio_id", referencedColumnName = "ID"))
 	private Set<Categoria> categorie = new HashSet<>();
+
+	public Annuncio(Long id, String testoAnnuncio, Integer prezzo, Date data, boolean aperto,
+			Set<Categoria> categorie) {
+		super();
+		this.id = id;
+		this.testoAnnuncio = testoAnnuncio;
+		this.prezzo = prezzo;
+		this.data = data;
+		this.aperto = aperto;
+		this.categorie = categorie;
+	}
+
+	public Annuncio(Long id, String testoAnnuncio, Integer prezzo, Date data, boolean aperto, Utente utenteInserimento,
+			Set<Categoria> categorie) {
+		super();
+		this.id = id;
+		this.testoAnnuncio = testoAnnuncio;
+		this.prezzo = prezzo;
+		this.data = data;
+		this.aperto = aperto;
+		this.utenteInserimento = utenteInserimento;
+		this.categorie = categorie;
+	}
+
+	public Annuncio() {
+		super();
+	}
+
+	public Annuncio(Long id, String testoAnnuncio, Integer prezzo, Set<Categoria> categorie) {
+		super();
+		this.id = id;
+		this.testoAnnuncio = testoAnnuncio;
+		this.prezzo = prezzo;
+		this.categorie = categorie;
+	}
+
+	public Set<Categoria> getCategorie() {
+		return categorie;
+	}
+
+	public void setCategorie(Set<Categoria> categorie) {
+		this.categorie = categorie;
+	}
 
 	public Long getId() {
 		return id;

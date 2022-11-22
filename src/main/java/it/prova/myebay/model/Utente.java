@@ -37,7 +37,7 @@ public class Utente {
 	@Column(name = "dateCreated")
 	private Date dateCreated;
 	@Column(name = "creditoResiduo")
-	private Integer creditoResiduo;
+	private Integer creditoResiduo=0;
 
 	// se non uso questa annotation viene gestito come un intero
 	@Enumerated(EnumType.STRING)
@@ -52,6 +52,30 @@ public class Utente {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "utenteAcquirente")
 	private Set<Acquisto> acquisti = new HashSet<>(0);
+
+	public Integer getCreditoResiduo() {
+		return creditoResiduo;
+	}
+
+	public void setCreditoResiduo(Integer creditoResiduo) {
+		this.creditoResiduo = creditoResiduo;
+	}
+
+	public Set<Annuncio> getAnnunci() {
+		return annunci;
+	}
+
+	public void setAnnunci(Set<Annuncio> annunci) {
+		this.annunci = annunci;
+	}
+
+	public Set<Acquisto> getAcquisti() {
+		return acquisti;
+	}
+
+	public void setAcquisti(Set<Acquisto> acquisti) {
+		this.acquisti = acquisti;
+	}
 
 	public Utente() {
 	}

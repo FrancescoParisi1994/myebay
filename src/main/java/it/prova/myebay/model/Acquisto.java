@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -25,9 +26,22 @@ public class Acquisto {
 	private Date data;
 	@Column(name = "prezzo")
 	private Integer prezzo;
-	@Column(name = "utenteAcquirente")
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "utenteAcquirente_id", nullable = false)
 	private Utente utenteAcquirente;
+
+	public Acquisto() {
+		super();
+	}
+
+	public Acquisto(Long id, String descrizione, Date data, Integer prezzo, Utente utenteAcquirente) {
+		super();
+		this.id = id;
+		this.descrizione = descrizione;
+		this.data = data;
+		this.prezzo = prezzo;
+		this.utenteAcquirente = utenteAcquirente;
+	}
 
 	public Long getId() {
 		return id;
